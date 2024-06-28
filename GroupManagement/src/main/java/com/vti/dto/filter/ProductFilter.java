@@ -1,0 +1,16 @@
+package com.vti.dto.filter;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class ProductFilter {
+	private int minPrice;
+
+	private int maxPrice;
+	
+	
+	
+	
+}
