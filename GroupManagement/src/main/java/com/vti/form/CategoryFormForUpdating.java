@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CategoryFormForUpdating {
+	private int id;
 
 	private String name;
 

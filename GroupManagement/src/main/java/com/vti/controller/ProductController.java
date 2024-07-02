@@ -2,8 +2,10 @@ package com.vti.controller;
 
 import java.util.List;
 
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vti.form.ProductFormForCreating;
 import com.vti.form.ProductFormForUpdating;
+import com.vti.dto.ProductDTO;
 import com.vti.dto.filter.ProductFilter;
 import com.vti.entity.Product;
 import com.vti.service.IProductService;
@@ -40,6 +43,7 @@ public class ProductController {
 		Page<Product> entities = service.getAllProducts(pageable, filter, search);
 		return new ResponseEntity<>(entities, HttpStatus.OK);
 	}
+
 
 	@GetMapping(value = "/name/{name}")
 	public ResponseEntity<?> existsProductByName(@PathVariable(name = "name") String name) {

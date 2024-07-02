@@ -17,10 +17,10 @@ public interface ICategoryService {
 
 	void createCategory(CategoryFormForCreating form);
 
-	Category getCategoryByID(int id);
+	public Category getCategoryByID(int id);
 
-	void updateCategory(int id, CategoryFormForUpdating form);
+	public void updateCategory(CategoryFormForUpdating form);
 
-	void deleteCategorys(List<Integer> ids);
+	public void deleteCategorys(List<Integer> ids);
 
 }

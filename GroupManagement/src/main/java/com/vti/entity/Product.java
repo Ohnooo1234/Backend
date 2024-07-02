@@ -70,21 +70,4 @@ public class Product implements Serializable {
 	
 	@OneToMany(mappedBy = "product")
 	private List<OrderDetail> orderDetails;
-	
-	public Product(String categoryname, String name, int number_of_products, float price, String thumbnailUrl, String description) {
-        this.category = new Category(categoryname);
-        this.name = name;
-        this.number_of_products = number_of_products;
-        this.price = price;
-        this.thumbnailUrl = thumbnailUrl;
-        this.description = description;
-    }
-	
-	public void setCategoryname(String categoryname) {
-        if (this.category == null) {
-            this.category = new Category(categoryname);
-        } else {
-            this.category.setName(categoryname);
-        }
-    }
 }

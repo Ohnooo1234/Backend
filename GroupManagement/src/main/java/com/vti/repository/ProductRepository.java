@@ -14,4 +14,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
 	public boolean existsByName(String name);
 
 	public void deleteByIdIn(List<Integer> ids);
+	
+	public List<Product> findByCategory_Id(Integer id);
 }

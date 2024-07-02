@@ -17,7 +17,7 @@ public class CategoryDTO extends RepresentationModel<CategoryDTO> {
 	
 	private String description;
 	
-	private List<Product> products;
+	private List<ProductDTO> products;
 	
 	@Data
 	@NoArgsConstructor

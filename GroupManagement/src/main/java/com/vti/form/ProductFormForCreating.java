@@ -20,9 +20,5 @@ public class ProductFormForCreating {
 	private String thumbnailUrl;
 	
 	private String description;
-	
-	public Product toEntity() {
-		return new Product(categoryname, name, number_of_products, price, thumbnailUrl, description);
-	}
 
 }

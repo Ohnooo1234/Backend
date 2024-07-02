@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +21,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "Category")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Category {
 
 	private static final long serialVersionUID = 1L;
@@ -34,14 +36,7 @@ public class Category {
 	private String description;
 	
 	@OneToMany(mappedBy = "category")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Product> products;
 	
-	public Category(String name, String description) {
-		this.name = name;
-		this.description = description;
-	}
-	
-	public Category(String name) {
-		this.name = name;
-	}
 }

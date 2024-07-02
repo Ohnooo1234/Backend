@@ -1,7 +1,6 @@
 package com.vti.form;
 
-import com.vti.entity.Category;
-
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,9 +11,13 @@ public class CategoryFormForCreating {
 	private String name;
 	
 	private String description;
-
-	public Category toEntity() {
-		return new Category(name, description);
+	
+	private List<Product> products;
+	
+	@Data
+	@NoArgsConstructor
+	public static class Product {
+		private Integer id;	
 	}
 
 }

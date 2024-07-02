@@ -3,7 +3,6 @@ package com.vti.config.authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -38,8 +37,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 		.antMatchers("/api/v1/login").anonymous()
 		.antMatchers("/api/v1/users/profile").authenticated()
-		.antMatchers("/api/v1/users/**", "/api/v1/products/**").permitAll()
-		.anyRequest().authenticated()
+		.antMatchers("/api/v1/users/**", "/api/v1/products/**", "/api/v1/categorys/**").permitAll()
+		.anyRequest().permitAll()
 		.and()
 		.httpBasic()
 		.and()

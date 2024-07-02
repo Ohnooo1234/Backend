@@ -1,9 +1,12 @@
 package com.vti.controller;
 
 import java.util.List;
-
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.modelmapper.ModelMapper;
 import com.vti.form.CategoryFormForCreating;
 import com.vti.form.CategoryFormForUpdating;
+import com.vti.dto.CategoryDTO;
 import com.vti.entity.Category;
 import com.vti.service.ICategoryService;
+
 
 @RestController
 @RequestMapping(value = "api/v1/categorys")
@@ -28,41 +34,62 @@ public class CategoryController {
 
 	@Autowired
 	private ICategoryService service;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@GetMapping()
-	public ResponseEntity<?> getAllCategorys(
-			Pageable pageable, 
-			@RequestParam(required = false) 
-			String search) {
-		Page<Category> entities = service.getAllCategorys(pageable, search);
-		return new ResponseEntity<>(entities, HttpStatus.OK);
+	public Page<CategoryDTO> getAllCategorys(Pageable pageable, @RequestParam(required = false) String search) {
+		Page<Category> entityPages = service.getAllCategorys(pageable, search);
+
+		// convert entities --> dtos
+				List<CategoryDTO> dtos = modelMapper.map(entityPages.getContent(), new TypeToken<List<CategoryDTO>>() {
+				}.getType());
+
+				// add HATEOAS
+				for (CategoryDTO dto : dtos) {
+					for (CategoryDTO.ProductDTO productDTO : dto.getProducts()) {
+						productDTO.add(
+								linkTo(methodOn(ProductController.class).getProductByID(productDTO.getId())).withSelfRel());
+					}
+					dto.add(linkTo(methodOn(CategoryController.class).getCategoryByID(dto.getId())).withSelfRel());
+				}
+
+				Page<CategoryDTO> dtoPages = new PageImpl<>(dtos, pageable, entityPages.getTotalElements());
+
+				return dtoPages;
 	}
 
 	@GetMapping(value = "/name/{name}")
-	public ResponseEntity<?> existsCategoryByName(@PathVariable(name = "name") String name) {
-		return new ResponseEntity<>(service.isCategoryExistsByName(name), HttpStatus.OK);
+	public boolean existsCategoryByName(@PathVariable(name = "name") String name) {
+		return service.isCategoryExistsByName(name);
 	}
 
 	@PostMapping()
-	public ResponseEntity<?> createCategory(@RequestBody CategoryFormForCreating form) {
+	public void createCategory(@RequestBody CategoryFormForCreating form) {
 		service.createCategory(form);
-		return new ResponseEntity<String>("Create successfully!", HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> getCategoryByID(@PathVariable(name = "id") int id) {
-		return new ResponseEntity<>(service.getCategoryByID(id), HttpStatus.OK);
+	public CategoryDTO getCategoryByID(@PathVariable(name = "id") int id) {
+		Category entity = service.getCategoryByID(id);
+
+		// convert entity to dto
+		CategoryDTO dto = modelMapper.map(entity, CategoryDTO.class);
+
+		dto.add(linkTo(methodOn(CategoryController.class).getCategoryByID(id)).withSelfRel());
+
+		return dto;
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<?> updateCategory(@PathVariable(name = "id") int id, @RequestBody CategoryFormForUpdating form) {
-		service.updateCategory(id, form);
-		return new ResponseEntity<String>("Update successfully!", HttpStatus.OK);
+	public void updateCategory(@PathVariable(name = "id") int id, @RequestBody CategoryFormForUpdating form) {
+		form.setId(id);
+		service.updateCategory(form);
 	}
 
 	@DeleteMapping(value = "/{ids}")
-	public ResponseEntity<?> deleteCategorys(@PathVariable(name = "ids") List<Integer> ids) {
-		service.deleteCategorys(ids);
-		return new ResponseEntity<String>("Delete successfully!", HttpStatus.OK);
-	}
+    public void deleteCategorys(@PathVariable(name = "ids") List<Integer> ids) {
+        service.deleteCategorys(ids);
+    }
 }

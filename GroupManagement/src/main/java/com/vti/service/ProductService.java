@@ -33,7 +33,7 @@ public class ProductService implements IProductService {
 	}
 
 	public void createProduct(ProductFormForCreating form) {
-		repository.save(form.toEntity());
+//		repository.save(form.toEntity());
 	}
 
 	public Product getProductByID(int id) {
@@ -41,14 +41,14 @@ public class ProductService implements IProductService {
 	}
 
 	public void updateProduct(int id, ProductFormForUpdating form) {
-		Product entity = repository.findById(id).get();
-		entity.setCategoryname(form.getCategoryname());
-		entity.setName(form.getName());
-		entity.setNumber_of_products(form.getNumber_of_products());
-		entity.setPrice(form.getPrice());
-		entity.setThumbnailUrl(form.getThumbnailUrl());
-		entity.setDescription(form.getDescription());
-		repository.save(entity);
+//		Product entity = repository.findById(id).get();
+//		entity.setCategoryname(form.getCategoryname());
+//		entity.setName(form.getName());
+//		entity.setNumber_of_products(form.getNumber_of_products());
+//		entity.setPrice(form.getPrice());
+//		entity.setThumbnailUrl(form.getThumbnailUrl());
+//		entity.setDescription(form.getDescription());
+//		repository.save(entity);
 	}
 
 	@Transactional

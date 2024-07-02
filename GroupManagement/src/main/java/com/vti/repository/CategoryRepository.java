@@ -9,9 +9,9 @@ import com.vti.entity.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer>, JpaSpecificationExecutor<Category> {
 
-	public Category findByName(String name);
+    public Category findByName(String name);
 
-	public boolean existsByName(String name);
+    public boolean existsByName(String name);
 
-	public void deleteByIdIn(List<Integer> ids);
+    public void deleteByIdIn(List<Integer> ids);
 }
