@@ -73,9 +73,9 @@ public class CategoryService implements ICategoryService {
 		Category category = modelMapper.map(form, Category.class);
 
 		Category dep = repository.findById(form.getId()).get();
-		category.setName(dep.getName());
-		category.setDescription(dep.getDescription());
-		repository.save(category);
+		dep.setName(category.getName());
+		dep.setDescription(category.getDescription());
+		repository.save(dep);
 		
 	}
 	
