@@ -11,6 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CategoryDTO extends RepresentationModel<CategoryDTO> {
+	public CategoryDTO(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
 	private int id;
 	
 	private String name;

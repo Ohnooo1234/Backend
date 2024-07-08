@@ -21,6 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
     void deleteByIdIn(Set<Integer> ids);
     
     List<Product> findByCategory_Id(Integer id);
+    
+    Page<Product> findAllByCategoryId(Integer categoryId, Pageable pageable);
 
     @Query("FROM Product a WHERE a.category.id <> :id")
     Page<Product> getListProduct(Pageable pageable, @Param("id") Integer id);

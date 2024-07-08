@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 
+import com.vti.dto.ProductDTO;
 import com.vti.dto.filter.ProductFilter;
 import com.vti.entity.CartItem;
 import com.vti.entity.Category;
@@ -48,10 +49,23 @@ public class ProductService implements IProductService {
 	private ModelMapper modelMapper;
 	
 	public Page<Product> getAllProducts(Pageable pageable, ProductFilter filter, String search) {
-		ProductSpecificationBuilder specification = new ProductSpecificationBuilder(filter, search);
-		return repository.findAll(specification.build(), pageable);
-	}
-	
+        ProductSpecificationBuilder specification = new ProductSpecificationBuilder(filter, search);
+        return repository.findAll(specification.build(), pageable);
+    }
+
+    public List<ProductDTO> convertToDto(List<Product> products) {
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+            if (product.getCategory() != null) {
+                productDTO.setCategory_id(product.getCategory().getId());
+                productDTO.setCategory_name(product.getCategory().getName());
+            }
+            productDTOs.add(productDTO);
+        }
+        return productDTOs;
+    }
+
 	public Product getProductByID(int id) {
 		return repository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
 	}
@@ -65,8 +79,7 @@ public class ProductService implements IProductService {
     }
 
 	@Transactional
-	public void createProduct(ProductFormForCreating form) {
-//		
+	public void createProduct(ProductFormForCreating form) {	
 		// omit id field
 		TypeMap<ProductFormForCreating, Product> typeMap = modelMapper.getTypeMap(ProductFormForCreating.class, Product.class);
 		if (typeMap == null) { // if not already added
@@ -80,14 +93,14 @@ public class ProductService implements IProductService {
 		}
 		// convert form to entity
 	    Product productEntity = modelMapper.map(form, Product.class);
-
-
 		
 		Integer category_id = form.getCategory_id();	
 		Category category = categoryRepository.findById(category_id).get();
 		productEntity.setCategory(category);
+		
 		// create product
 	    repository.save(productEntity);
+
 	}
 
 	@Transactional

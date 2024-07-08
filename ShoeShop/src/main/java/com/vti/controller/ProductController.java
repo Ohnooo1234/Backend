@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
 import com.vti.dto.ProductDTO;
 import com.vti.dto.filter.ProductFilter;
 import com.vti.entity.Product;
@@ -36,7 +35,9 @@ public class ProductController {
     public Page<ProductDTO> getAllProducts(Pageable pageable, ProductFilter filter, @RequestParam(required = false) String search) {
         Page<Product> entityPages = service.getAllProducts(pageable, filter, search);
 
-        List<ProductDTO> dtos = modelMapper.map(entityPages.getContent(), new TypeToken<List<ProductDTO>>() {}.getType());
+        // convert entities --> dtos
+        List<ProductDTO> dtos = service.convertToDto(entityPages.getContent());
+
         return new PageImpl<>(dtos, pageable, entityPages.getTotalElements());
     }
     

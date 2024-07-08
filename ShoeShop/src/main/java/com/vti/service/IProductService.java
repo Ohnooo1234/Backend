@@ -1,5 +1,6 @@
 package com.vti.service;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.vti.form.ProductFormForCreating;
 import com.vti.form.ProductFormForUpdating;
+import com.vti.dto.ProductDTO;
 import com.vti.dto.filter.ProductFilter;
 import com.vti.entity.Product;
 
@@ -25,5 +27,7 @@ public interface IProductService {
 	public void deleteProducts(Set<Integer> ids);
 
 	Page<Product> getListProduct(Pageable pageable, Integer id);
+
+	List<ProductDTO> convertToDto(List<Product> content);
 
 }
