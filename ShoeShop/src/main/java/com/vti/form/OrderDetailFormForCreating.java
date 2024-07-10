@@ -7,9 +7,5 @@ public class OrderDetailFormForCreating {
 	private int product_id;
 	
 	private int quantity;
-	
-	private float price;
-	
-	private float total_price = quantity * price;
 
 }

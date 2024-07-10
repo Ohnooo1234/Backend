@@ -42,32 +42,44 @@ public class OrderDetailService implements IOrderDetailService {
 
 	@Transactional
 	public void createOrderDetail(OrderDetailFormForCreating form) {
-		
-		// convert form to entity
-		OrderDetail orderdetailEntity = modelMapper.map(form, OrderDetail.class);
+	    // Convert form to entity
+	    OrderDetail orderDetailEntity = modelMapper.map(form, OrderDetail.class);
 
-		// create category
-		OrderDetail orderdetail  = repository.save(orderdetailEntity);
-		
-		
-		Integer product_id = orderdetail.getProduct().getId();		
-		Product product = productRepository.findById(product_id).get();
-		product.setId(product.getId());
-		productRepository.save(product);
+	    // Create orderdetail
+	    OrderDetail savedOrderDetail = repository.save(orderDetailEntity);
 
+	    // Calculate and set the total price
+	    savedOrderDetail.setTotal_price(savedOrderDetail.getQuantity() * savedOrderDetail.getProduct().getPrice());
+	    repository.save(savedOrderDetail);
+
+	    // Update the product's number of products
+	    Product product = savedOrderDetail.getProduct();
+	    product.setNumber_of_products(product.getNumber_of_products() - savedOrderDetail.getQuantity());
+	    productRepository.save(product);
 	}
+
 
 	@Transactional
 	public void updateOrderDetail(OrderDetailFormForUpdating form) {
+	    // Convert form to entity
+	    OrderDetail orderDetail = modelMapper.map(form, OrderDetail.class);
 
-		// convert form to entity
-		OrderDetail orderdetail = modelMapper.map(form, OrderDetail.class);
+	    // Get the existing OrderDetail
+	    OrderDetail existingOrderDetail = repository.findById(orderDetail.getId()).get();
 
-		OrderDetail ord = repository.findById(form.getId()).get();
-		ord.setQuantity(orderdetail.getQuantity());
-		ord.setPrice(orderdetail.getPrice());
-		ord.setTotal_price(orderdetail.getQuantity() * orderdetail.getPrice());
-		repository.save(ord);	
+	    // Update the product's number of products
+	    Product oldProduct = existingOrderDetail.getProduct();
+	    oldProduct.setNumber_of_products(oldProduct.getNumber_of_products() + existingOrderDetail.getQuantity());
+	    productRepository.save(oldProduct);
+
+	    Product newProduct = productRepository.findById(form.getProduct_id()).get();
+	    newProduct.setNumber_of_products(newProduct.getNumber_of_products() - orderDetail.getQuantity());
+	    productRepository.save(newProduct);
+
+	    // Save the updated OrderDetail
+	    orderDetail.setTotal_price(orderDetail.getQuantity() * newProduct.getPrice());
+	    repository.save(orderDetail);
 	}
+
 
 }

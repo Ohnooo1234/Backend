@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.vti.entity.Product;
 import com.vti.dto.filter.CartItemFilter;
 import com.vti.entity.CartItem;
+import com.vti.entity.OrderDetail;
 import com.vti.form.CartItemFormForCreating;
 import com.vti.form.CartItemFormForUpdating;
 import com.vti.repository.CartItemRepository;
@@ -44,29 +45,39 @@ public class CartItemService implements ICartItemService {
 	@Transactional
 	public void createCartItem(CartItemFormForCreating form) {
 		
-		// convert form to entity
-		CartItem cartitemEntity = modelMapper.map(form, CartItem.class);
+		// Convert form to entity
+		CartItem cartItemEntity = modelMapper.map(form, CartItem.class);
 
-		// create category
-		CartItem cartitem  = repository.save(cartitemEntity);
-		
-		
-		Integer product_id = cartitem.getProduct().getId();		
-		Product product = productRepository.findById(product_id).get();
-		product.setId(product.getId());
-		productRepository.save(product);
+	    // Create cartItem
+		CartItem savedCartItem = repository.save(cartItemEntity);
+	    repository.save(savedCartItem);
+
+	    // Update the product's number of products
+	    Product product = savedCartItem.getProduct();
+	    product.setNumber_of_products(product.getNumber_of_products() - savedCartItem.getQuantity());
+	    productRepository.save(product);
 
 	}
 
 	@Transactional
 	public void updateCartItem(CartItemFormForUpdating form) {
 
-		// convert form to entity
-		CartItem cartitem = modelMapper.map(form, CartItem.class);
+		// Convert form to entity
+	    CartItem cartItem = modelMapper.map(form, CartItem.class);
 
-		CartItem cart = repository.findById(form.getId()).get();
-		cart.setQuantity(cartitem.getQuantity());
-		repository.save(cart);	
+	    // Get the existing CartItem
+	    CartItem existingCartItem = repository.findById(cartItem.getId()).get();
+
+	    // Update the product's number of products
+	    Product oldProduct = existingCartItem.getProduct();
+	    oldProduct.setNumber_of_products(oldProduct.getNumber_of_products() + existingCartItem.getQuantity());
+	    productRepository.save(oldProduct);
+
+	    Product newProduct = productRepository.findById(form.getProduct_id()).get();
+	    newProduct.setNumber_of_products(newProduct.getNumber_of_products() - cartItem.getQuantity());
+	    productRepository.save(newProduct);
+
+	    repository.save(cartItem);
 	}
 
 }

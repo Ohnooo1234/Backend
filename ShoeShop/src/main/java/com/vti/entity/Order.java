@@ -22,10 +22,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Entity
-@Table(name = "Order")
+@Table(name = "`Order`")
 @Data
 @NoArgsConstructor
 public class Order {
@@ -42,9 +40,6 @@ public class Order {
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "status", nullable = false)
 	private OrderStatus status = OrderStatus.PENDING;
-	
-	@Column(name = "total_amount", nullable = false)
-	private int total_amount;
 	
 	@Column(name = "created_at", updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)

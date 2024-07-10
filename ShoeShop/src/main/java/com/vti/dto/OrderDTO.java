@@ -18,7 +18,7 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 	
 	private String address;
 	
-	private String orderstatus;
+	private String status;
 	
 	private int total_amount;
 	
@@ -30,15 +30,5 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 	@NoArgsConstructor
 	public static class OrderDetailDTO extends RepresentationModel<OrderDTO> {	
 		private int id;
-	}
-	
-	private List<TransactionDTO> transactions;
-	
-	@Data
-	@NoArgsConstructor
-	public static class TransactionDTO extends RepresentationModel<OrderDTO> {
-		private int id;
-	}
-	
-	
+	}	
 }

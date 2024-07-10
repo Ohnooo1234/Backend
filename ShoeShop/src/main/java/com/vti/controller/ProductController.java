@@ -49,8 +49,7 @@ public class ProductController {
         Page<Product> entityPages = service.getListProduct(pageable, categoryId);
 
         // convert entities --> dtos
-        List<ProductDTO> dtos = modelMapper.map(entityPages.getContent(), new TypeToken<List<ProductDTO>>() {
-        }.getType());
+        List<ProductDTO> dtos = service.convertToDto(entityPages.getContent());
 
         Page<ProductDTO> dtoPages = new PageImpl<>(dtos, pageable, entityPages.getTotalElements());
 
@@ -73,6 +72,10 @@ public class ProductController {
 
         // convert entity to dto
         ProductDTO dto = modelMapper.map(entity, ProductDTO.class);
+        if (entity.getCategory() != null) {
+            dto.setCategory_id(entity.getCategory().getId());
+            dto.setCategory_name(entity.getCategory().getName());
+        }
         dto.add(linkTo(methodOn(ProductController.class).getProductByID(id)).withSelfRel());
 
         return dto;

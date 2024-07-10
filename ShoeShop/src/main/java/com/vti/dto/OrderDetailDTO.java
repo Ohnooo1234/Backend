@@ -12,12 +12,12 @@ public class OrderDetailDTO extends RepresentationModel<OrderDetailDTO> {
 	
 	private int quantity;
 	
-	private float price;
-	
-	private float total_price = quantity * price;
-	
 	private int product_id;
 	
+	private int price;
+	
 	private int order_id;
+	
+	private float total_price = quantity * price;
 
 }

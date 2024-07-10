@@ -42,11 +42,8 @@ public class OrderDetail {
 	@Column(name = "quantity", nullable = false)
 	private int quantity;
 	
-	@Column(name = "price", nullable = false)
-	private float price;
-	
 	@Column(name = "total_price", nullable = false)
-	private float total_price = quantity * price;
+	private float total_price;
 	
 	@ManyToOne
 	@JoinColumn(name = "product_id")

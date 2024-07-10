@@ -71,12 +71,12 @@ public class ProductService implements IProductService {
 	}
 
 	public Page<Product> getListProduct(Pageable pageable, Integer id) {
-        if (id != null) {
-            return repository.getListProduct(pageable, id);
-        } else {
-            return repository.findAll(pageable);
-        }
-    }
+	    if (id != null) {
+	        return repository.getListProductByCategoryId(pageable, id);
+	    } else {
+	        return repository.findAll(pageable);
+	    }
+	}
 
 	@Transactional
 	public void createProduct(ProductFormForCreating form) {	

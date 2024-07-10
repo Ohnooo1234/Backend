@@ -24,6 +24,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
     
     Page<Product> findAllByCategoryId(Integer categoryId, Pageable pageable);
 
-    @Query("FROM Product a WHERE a.category.id <> :id")
-    Page<Product> getListProduct(Pageable pageable, @Param("id") Integer id);
+	Page<Product> getListProductByCategoryId(Pageable pageable, Integer id);
 }

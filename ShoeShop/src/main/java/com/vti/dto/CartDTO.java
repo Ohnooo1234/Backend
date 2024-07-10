@@ -20,7 +20,5 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 	public static class CartItemDTO extends RepresentationModel<CartDTO>{
 		private short id;
 		
-		private short quantity;
-		
 	}
 }

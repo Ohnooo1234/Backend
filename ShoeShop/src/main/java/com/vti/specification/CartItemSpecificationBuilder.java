@@ -19,7 +19,7 @@ public class CartItemSpecificationBuilder {
 	@SuppressWarnings("deprecation")
 	public Specification<CartItem> build() {
 
-		SearchCriteria seachCriteria = new SearchCriteria("name", "Like", search);
+		SearchCriteria seachCriteria = new SearchCriteria("id", "Like", search);
 		SearchCriteria minQuantityCriteria = new SearchCriteria("price", ">=", filter.getMinQuantity());
 		SearchCriteria maxQuantityCriteria = new SearchCriteria("price", "<=", filter.getMaxQuantity());
 
