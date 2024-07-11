@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 public class CartDTO extends RepresentationModel<CartDTO> {
 	private int id;
 	
-	private String user_id;
+	private int user_id;
+	
+	private String username;
 	
 	private List<CartItemDTO> cartItems;
 	
@@ -19,6 +21,8 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 	@NoArgsConstructor
 	public static class CartItemDTO extends RepresentationModel<CartDTO>{
 		private short id;
+		private int productId;
+        private int quantity;
 		
 	}
 }

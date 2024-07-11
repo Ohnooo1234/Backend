@@ -14,6 +14,14 @@ public class CartItemDTO extends RepresentationModel<CartItemDTO> {
 	
 	private int product_id;
 	
+	private String productname;
+	
+	private float price;
+	
 	private int cart_id;
+	
+	private int user_id;
+	
+	
 	
 }

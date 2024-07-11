@@ -1,5 +1,8 @@
 package com.vti.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
@@ -10,12 +13,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.vti.entity.Product;
+import com.vti.entity.User;
+import com.vti.dto.CartItemDTO;
+import com.vti.dto.ProductDTO;
 import com.vti.dto.filter.CartItemFilter;
+import com.vti.entity.Cart;
 import com.vti.entity.CartItem;
+import com.vti.entity.Category;
 import com.vti.entity.OrderDetail;
 import com.vti.form.CartItemFormForCreating;
 import com.vti.form.CartItemFormForUpdating;
 import com.vti.repository.CartItemRepository;
+import com.vti.repository.CartRepository;
 import com.vti.repository.ProductRepository;
 import com.vti.specification.CartItemSpecificationBuilder;
 
@@ -31,15 +40,43 @@ public class CartItemService implements ICartItemService {
 	@Autowired
 	private ProductRepository productRepository;
 	
+	@Autowired
+	private CartRepository cartRepository;
+	
 	public Page<CartItem> getAllCartItems(Pageable pageable, CartItemFilter filter, String search) {
 
 		CartItemSpecificationBuilder specification = new CartItemSpecificationBuilder(filter, search);
 
 		return repository.findAll(specification.build(), pageable);
 	}	
+	
+	public List<CartItemDTO> convertToDto(List<CartItem> cartitems) {
+        List<CartItemDTO> cartitemDTOs = new ArrayList<>();
+        for (CartItem cartitem : cartitems) {
+            CartItemDTO cartitemDTO = modelMapper.map(cartitem, CartItemDTO.class);
+            if (cartitem.getProduct() != null && cartitem.getCart() != null) {
+                cartitemDTO.setProduct_id(cartitem.getProduct().getId());
+                cartitemDTO.setCart_id(cartitem.getCart().getId());
+                cartitemDTO.setPrice(cartitem.getProduct().getPrice());
+                cartitemDTO.setProductname(cartitem.getProduct().getName());
+                cartitemDTO.setQuantity(cartitem.getQuantity());
+                cartitemDTO.setUser_id(cartitem.getCart().getUser().getId());
+            }
+            cartitemDTOs.add(cartitemDTO);
+        }
+        return cartitemDTOs;
+    }
 
 	public CartItem getCartItemByID(int id) {
 		return repository.findById(id).get();
+	}
+	
+	public Page<CartItem> getListCartItem(Pageable pageable, Integer cartId) {
+	    if (cartId != null) {
+	        return repository.getListCartItemByCartId(pageable, cartId);
+	    } else {
+	        return repository.findAll(pageable);
+	    }
 	}
 
 	@Transactional
@@ -47,37 +84,52 @@ public class CartItemService implements ICartItemService {
 		
 		// Convert form to entity
 		CartItem cartItemEntity = modelMapper.map(form, CartItem.class);
-
-	    // Create cartItem
-		CartItem savedCartItem = repository.save(cartItemEntity);
-	    repository.save(savedCartItem);
-
-	    // Update the product's number of products
-	    Product product = savedCartItem.getProduct();
-	    product.setNumber_of_products(product.getNumber_of_products() - savedCartItem.getQuantity());
-	    productRepository.save(product);
+		
+		Integer cart_id = form.getCart_id();	
+		Cart cart = cartRepository.findById(cart_id).get();
+		cartItemEntity.setCart(cart);
+		
+		Integer product_id = form.getProduct_id();	
+		Product product = productRepository.findById(product_id).get();
+		product.setNumber_of_products(product.getNumber_of_products() - cartItemEntity.getQuantity());
+		cartItemEntity.setProduct(product);
+		
+		repository.save(cartItemEntity);
 
 	}
 
 	@Transactional
 	public void updateCartItem(CartItemFormForUpdating form) {
+		// Fetch existing cart item
+		CartItem cartItem = repository.findById(form.getId())
+				.orElseThrow(() -> new RuntimeException("CartItem not found"));
 
-		// Convert form to entity
-	    CartItem cartItem = modelMapper.map(form, CartItem.class);
+		// Update fields (ensure primary key 'id' is not altered)
+		cartItem.setQuantity(form.getQuantity());
 
-	    // Get the existing CartItem
-	    CartItem existingCartItem = repository.findById(cartItem.getId()).get();
+		// Save updated cart item
+		repository.save(cartItem);
+	}
 
-	    // Update the product's number of products
-	    Product oldProduct = existingCartItem.getProduct();
-	    oldProduct.setNumber_of_products(oldProduct.getNumber_of_products() + existingCartItem.getQuantity());
-	    productRepository.save(oldProduct);
 
-	    Product newProduct = productRepository.findById(form.getProduct_id()).get();
-	    newProduct.setNumber_of_products(newProduct.getNumber_of_products() - cartItem.getQuantity());
-	    productRepository.save(newProduct);
-
-	    repository.save(cartItem);
+	@Override
+	@Transactional
+	public void deleteCartItems(List<Integer> ids) {
+		List<CartItem> cartitems = repository.findAllById(ids);
+        List<Product> productEntities = new ArrayList<>();
+        List<Cart> cartEntities = new ArrayList<>();
+        
+        for (CartItem cartitem : cartitems) {
+            Product product = cartitem.getProduct();
+            Cart cart = cartitem.getCart();
+            cartEntities.add(cart);
+            productEntities.add(product);
+        }
+        
+        productRepository.saveAll(productEntities);
+        cartRepository.saveAll(cartEntities);
+        
+        repository.deleteByIdIn(ids);
 	}
 
 }

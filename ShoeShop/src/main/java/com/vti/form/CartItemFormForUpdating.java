@@ -7,10 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartItemFormForUpdating {
 	private int id;
-
-//	private int cart_id;
-	
-	private int product_id;
 	
 	private int quantity;
 
