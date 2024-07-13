@@ -15,10 +15,13 @@ public class LoginInfoUser {
 	private int phoneNumber;
 
 	private String role;
+	private int id;
 
 	private String status;
 
-	public LoginInfoUser(String token, String userName, String email, String firstName, String lastName, int phoneNumber, String role,
+
+
+	public LoginInfoUser(String token, String userName, String email, String firstName, String lastName, int phoneNumber, String role,int id,
 			String status) {
 		this.token = token;
 		this.userName = userName;
@@ -27,6 +30,7 @@ public class LoginInfoUser {
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
 		this.role = role;
+		this.id = id;
 		this.status = status;
 	}
 
@@ -62,4 +66,11 @@ public class LoginInfoUser {
 		return status;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 }

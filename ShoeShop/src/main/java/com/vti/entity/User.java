@@ -70,13 +70,14 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<Transaction> transactions;
 
-	public User(String userName, String email, String password, String firstName, String lastName, int phoneNumber) {
+	public User(String userName, String email, String password, String firstName, String lastName, int phoneNumber, int id) {
 		this.userName = userName;
 		this.email = email;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
+		this.id=id;
 	}
 
 }

@@ -35,15 +35,16 @@ public class JWTTokenService {
         
         // convert user entity to user dto
         LoginInfoUser userDto = new LoginInfoUser(
-        		user.getStatus().equals(UserStatus.ACTIVE) ? JWT : null, 
+        		user.getStatus().equals(UserStatus.ACTIVE) ? JWT : null,
         		user.getUserName(), 
         		user.getEmail(), 
         		user.getFirstName(), 
         		user.getLastName(),
         		user.getPhoneNumber(),
-        		user.getRole(), 
+        		user.getRole(),
+                user.getId(),
         		user.getStatus().toString());
-        
+
         // convert object to json
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(userDto);

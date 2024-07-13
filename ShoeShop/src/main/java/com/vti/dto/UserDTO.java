@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserDTO extends RepresentationModel<UserDTO> {
+
+	private int id;
 	
 	private String userName;
 	
@@ -25,7 +27,7 @@ public class UserDTO extends RepresentationModel<UserDTO> {
 	
 
 	public User toEntity() {
-		return new User(userName, email, password, firstName, lastName, phoneNumber);
+		return new User(userName, email, password, firstName, lastName, phoneNumber,id);
 	}
 
 }
