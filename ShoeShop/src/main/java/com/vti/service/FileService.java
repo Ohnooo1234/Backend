@@ -12,8 +12,8 @@ import com.vti.utils.FileManager;
 public class FileService implements IFileService {
 
 	private FileManager fileManager = new FileManager();
-	private String linkFolder = "C:\\Users\\pc\\Desktop\\Avatar";
-
+//	private String linkFolder = "C:\\Users\\pc\\Desktop\\Avatar";
+private String linkFolder = "C:\\Users\\Admin QT\\Desktop\\source fe\\SOURCE_FE_VTI\\src\\assets";
 	@Override
 	public String uploadImage(MultipartFile image) throws IOException {
 

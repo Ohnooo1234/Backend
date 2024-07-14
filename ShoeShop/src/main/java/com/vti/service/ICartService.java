@@ -13,7 +13,7 @@ import com.vti.form.CartFormForUpdating;
 public interface ICartService {
 	Page<Cart> getAllCarts(Pageable pageable, String search);
 	
-	void createCart(CartFormForCreating form);
+	Integer createCart(CartFormForCreating form);
 
 	public Cart getCartByID(int id);
 

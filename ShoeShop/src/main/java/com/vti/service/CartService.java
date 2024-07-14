@@ -73,7 +73,7 @@ public class CartService implements ICartService {
 	}
 
 	@Transactional
-    public void createCart(CartFormForCreating form) {
+	public Integer createCart(CartFormForCreating form) {
 		// omit id field
 		TypeMap<CartFormForCreating, Cart> typeMap = modelMapper.getTypeMap(CartFormForCreating.class, Cart.class);
 		if (typeMap == null) { // if not already added
@@ -87,29 +87,14 @@ public class CartService implements ICartService {
 		}
 		// convert form to entity
 		Cart cartEntity = modelMapper.map(form, Cart.class);
-		
-		Integer user_id = form.getUser_id();	
+
+		Integer user_id = form.getUser_id();
 		User user = userRepository.findById(user_id).get();
 		cartEntity.setUser(user);
-
-		// create category
-		Cart cart  = repository.save(cartEntity);
-
-        // Convert and set cart items
-        List<CartItem> cartItemEntities = new ArrayList<CartItem>();
-        List<CartFormForCreating.CartItem> cartitems = form.getCartItems();
-        for (CartFormForCreating.CartItem cartitem : cartitems) {
-            int id = cartitem.getId();
-            CartItem cari = cartItemRepository.findById(id).get();
-            cari.setCart(cart);
-            cartItemEntities.add(cari);
-        }
-        // Save cart items
-        cartItemRepository.saveAll(cartItemEntities);
-
-        // Save cart
-        repository.save(cartEntity);
-    }
+		// Save cart
+		Cart savedCart = repository.save(cartEntity);
+		return savedCart.getId();
+	}
 
 	@Transactional
 	public void updateCart(CartFormForUpdating form) {

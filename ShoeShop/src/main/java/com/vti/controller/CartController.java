@@ -3,12 +3,16 @@ package com.vti.controller;
 import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,8 +70,14 @@ public class CartController {
     }
 
 	@PostMapping()
-	public void createCart(@RequestBody CartFormForCreating form) {
-		service.createCart(form);
+	public ResponseEntity<Object> createCart(@RequestBody CartFormForCreating form) {
+		Integer cartId = service.createCart(form);
+		// Create a response object with only the ID
+		Object response = new Object() {
+			@JsonProperty("id")
+			public Integer id = cartId;
+		};
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{id}")

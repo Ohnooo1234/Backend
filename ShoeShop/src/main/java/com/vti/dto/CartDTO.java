@@ -16,7 +16,11 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 	private String username;
 	
 	private List<CartItemDTO> cartItems;
-	
+
+	public CartDTO(int id) {
+		this.id=id;
+	}
+
 	@Data
 	@NoArgsConstructor
 	public static class CartItemDTO extends RepresentationModel<CartDTO>{
