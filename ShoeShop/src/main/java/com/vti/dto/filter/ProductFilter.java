@@ -10,4 +10,6 @@ public class ProductFilter {
 
 	private int maxPrice;
 	
+	private int category_id;
+	
 }

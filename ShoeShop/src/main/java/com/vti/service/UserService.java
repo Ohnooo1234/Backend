@@ -168,6 +168,11 @@ public class UserService implements IUserService {
 		User user = userRepository.findByUserName(username);
 		
 		user.setAvatarUrl(dto.getAvatarUrl());
+		user.setFirstName(dto.getFirstName());
+		user.setLastName(dto.getLastName());
+		user.setEmail(dto.getEmail());
+		user.setFullName(dto.getFirstName() + dto.getLastName());
+		user.setPhoneNumber(dto.getPhoneNumber());
 		userRepository.save(user);
 		
 		// TODO other field

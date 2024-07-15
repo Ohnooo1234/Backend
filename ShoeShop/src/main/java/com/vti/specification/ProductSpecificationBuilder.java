@@ -18,16 +18,17 @@ public class ProductSpecificationBuilder {
 
 	@SuppressWarnings("deprecation")
 	public Specification<Product> build() {
-
-		SearchCriteria seachCriteria = new SearchCriteria("name", "Like", search);
+ 
+		SearchCriteria searchCriteria = new SearchCriteria("name", "Like", search);
 		SearchCriteria minPriceCriteria = new SearchCriteria("price", ">=", filter.getMinPrice());
 		SearchCriteria maxPriceCriteria = new SearchCriteria("price", "<=", filter.getMaxPrice());
+		SearchCriteria categoryIdCriteria = new SearchCriteria("category.id", "=", filter.getCategory_id()); // changed "category_id" to "category.id"
 
 		Specification<Product> where = null;
 
 		// search
 		if (!StringUtils.isEmpty(search)) {
-			where = new ProductSpecification(seachCriteria);
+			where = new ProductSpecification(searchCriteria);
 		}
 
 		// min Price filter
@@ -45,6 +46,15 @@ public class ProductSpecificationBuilder {
 				where = where.and(new ProductSpecification(maxPriceCriteria));
 			} else {
 				where = new ProductSpecification(maxPriceCriteria);
+			}
+		}
+		
+		// categoryId filter
+		if(filter.getCategory_id() != 0) {
+			if (where != null) {
+				where = where.and(new ProductSpecification(categoryIdCriteria));
+			} else {
+				where = new ProductSpecification(categoryIdCriteria);
 			}
 		}
 

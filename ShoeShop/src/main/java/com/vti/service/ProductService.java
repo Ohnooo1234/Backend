@@ -19,13 +19,11 @@ import com.vti.dto.ProductDTO;
 import com.vti.dto.filter.ProductFilter;
 import com.vti.entity.CartItem;
 import com.vti.entity.Category;
-import com.vti.entity.OrderDetail;
 import com.vti.entity.Product;
 import com.vti.form.ProductFormForCreating;
 import com.vti.form.ProductFormForUpdating;
 import com.vti.repository.CartItemRepository;
 import com.vti.repository.CategoryRepository;
-import com.vti.repository.OrderDetailRepository;
 import com.vti.repository.ProductRepository;
 import com.vti.specification.ProductSpecificationBuilder;
 
@@ -37,9 +35,6 @@ public class ProductService implements IProductService {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
-	@Autowired
-	private OrderDetailRepository orderdetailRepository;
 	
 	@Autowired 
 	private CartItemRepository cartitemRepository;
@@ -133,8 +128,6 @@ public class ProductService implements IProductService {
         for (Integer id : ids) {
             List<CartItem> cartitems = cartitemRepository.findByProduct_Id(id);
             cartitemRepository.deleteAll(cartitems);
-            List<OrderDetail> orderdetails = orderdetailRepository.findByProduct_Id(id);
-            orderdetailRepository.deleteAll(orderdetails);
         }
         
         repository.deleteByIdIn(ids);

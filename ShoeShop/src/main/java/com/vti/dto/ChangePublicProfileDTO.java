@@ -1,29 +1,26 @@
 package com.vti.dto;
 
+import lombok.Data;
+
+@Data
 public class ChangePublicProfileDTO {
 
 	// TODO validate
 	private String avatarUrl;
 
 	private String biography;
+	
+	private String userName;
+	
+	private String email;
+
+	private String firstName;
+
+	private String lastName;
+	
+	private int phoneNumber;
 
 	public ChangePublicProfileDTO() {
-	}
-
-	public String getAvatarUrl() {
-		return avatarUrl;
-	}
-
-	public void setAvatarUrl(String avatarUrl) {
-		this.avatarUrl = avatarUrl;
-	}
-
-	public String getBiography() {
-		return biography;
-	}
-
-	public void setBiography(String biography) {
-		this.biography = biography;
 	}
 
 }

@@ -33,6 +33,13 @@ public class ProductSpecification implements Specification<Product> {
 			return criteriaBuilder.lessThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().toString());
 		}
 
+		if (criteria.getOperator().equalsIgnoreCase("=")) {
+			if (criteria.getKey().equals("category.id")) {
+				return criteriaBuilder.equal(root.get("category").get("id"), criteria.getValue());
+			} else {
+				return criteriaBuilder.equal(root.get(criteria.getKey()), criteria.getValue().toString());
+			}
+		}
 		return null;
 	}
 

@@ -13,14 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.vti.entity.Product;
-import com.vti.entity.User;
 import com.vti.dto.CartItemDTO;
-import com.vti.dto.ProductDTO;
 import com.vti.dto.filter.CartItemFilter;
 import com.vti.entity.Cart;
 import com.vti.entity.CartItem;
-import com.vti.entity.Category;
-import com.vti.entity.OrderDetail;
 import com.vti.form.CartItemFormForCreating;
 import com.vti.form.CartItemFormForUpdating;
 import com.vti.repository.CartItemRepository;
@@ -61,6 +57,7 @@ public class CartItemService implements ICartItemService {
                 cartitemDTO.setProductname(cartitem.getProduct().getName());
                 cartitemDTO.setQuantity(cartitem.getQuantity());
                 cartitemDTO.setUser_id(cartitem.getCart().getUser().getId());
+                cartitemDTO.setUsername(cartitem.getCart().getUser().getUserName());
             }
             cartitemDTOs.add(cartitemDTO);
         }

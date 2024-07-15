@@ -67,7 +67,5 @@ public class Product implements Serializable {
 	
 	@OneToMany(mappedBy = "product")
 	private List<CartItem> cartItems;
-	
-	@OneToMany(mappedBy = "product")
-	private List<OrderDetail> orderDetails;
+
 }

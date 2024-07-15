@@ -22,6 +22,8 @@ public class CartItemDTO extends RepresentationModel<CartItemDTO> {
 	
 	private int user_id;
 	
+	private String username;
+	
 	
 	
 }

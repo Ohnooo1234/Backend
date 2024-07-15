@@ -62,13 +62,7 @@ public class User implements Serializable {
 	private String avatarUrl;
 	
 	@OneToMany(mappedBy = "user")
-	private List<Order> orders;
-	
-	@OneToMany(mappedBy = "user")
 	private List<Cart> carts;
-	
-	@OneToMany(mappedBy = "user")
-	private List<Transaction> transactions;
 
 	public User(String userName, String email, String password, String firstName, String lastName, int phoneNumber, int id) {
 		this.userName = userName;
